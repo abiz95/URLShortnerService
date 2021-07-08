@@ -151,16 +151,16 @@ public class ReportIssueServiceImpl implements ReportIssueService {
         java.util.Date CurrentDate = new Date();
         Date timeStamp = new java.sql.Timestamp(CurrentDate.getTime());
         
-        Optional<ReportIssueEntity> issueDetails = Optional.ofNullable(reportIssueDAO.getIssueReport(reportIssueDetailsModel.getIssueId()));  
+        ReportIssueEntity issueDetails = reportIssueDAO.getIssueReport(reportIssueDetailsModel.getIssueId());
+        Optional<ReportIssueEntity> isIssueDetails = Optional.ofNullable(reportIssueDAO.getIssueReport(reportIssueDetailsModel.getIssueId()));  
         
-    	if (issueDetails.isPresent()) {
+    	if (isIssueDetails.isPresent()) {
     		
-    		ReportIssueEntity reportIssueEntity = new ReportIssueEntity();
-    		reportIssueEntity.setIssueTitle(reportIssueDetailsModel.getIssueTitle());
-    		reportIssueEntity.setIssueDescription(reportIssueDetailsModel.getIssueDescription());
-    		reportIssueEntity.setUpd_rec_ts(timeStamp);
+    		issueDetails.setIssueTitle(reportIssueDetailsModel.getIssueTitle());
+    		issueDetails.setIssueDescription(reportIssueDetailsModel.getIssueDescription());
+    		issueDetails.setUpd_rec_ts(timeStamp);
     		
-    		reportIssueDAO.saveIssue(reportIssueEntity);
+    		reportIssueDAO.saveIssue(issueDetails);
     		return "success";
 		}
     	
