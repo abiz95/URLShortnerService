@@ -28,6 +28,10 @@ public class UserDAOImpl implements UserDAO {
 		return userRepository.findByEmailAndPassword(email, password);
 	}
 	
+	public UserEntity getUserByEmail(String email) throws Exception {
+		return userRepository.findByEmail(email);
+	}
+	
 	public UserEntity getUserId(String userId) throws Exception {
 		return userRepository.findByUserId(userId);
 	}

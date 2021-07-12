@@ -17,4 +17,5 @@ public interface UserService {
 	public String updateUserPersonalInfo(UserPersonalInfoModel userPersonalInfoModel) throws Exception;
 	public String updateUserCredential(UserCredentialModel userCredentialModel) throws Exception;
 	public String updateUserPlan(UserPlanModel userPlanModel) throws Exception;
+	public String getUserId(UserAuthModel userAuthModel) throws Exception;
 }

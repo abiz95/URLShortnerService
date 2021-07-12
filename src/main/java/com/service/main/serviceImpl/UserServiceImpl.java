@@ -186,4 +186,16 @@ public class UserServiceImpl implements UserService {
 		return "failed";
 	}
 	
+	public String getUserId(UserAuthModel userAuthModel) throws Exception {
+		
+		Optional<UserEntity> isUserExist = Optional.ofNullable(userDAO.UserAuthentication(userAuthModel.getEmail(), userAuthModel.getPassword())); 
+		
+		if (isUserExist.isPresent()) {
+			
+			return isUserExist.get().getUserId();
+		}
+		
+		return "failed";
+	}
+	
 }

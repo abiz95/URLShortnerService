@@ -1,5 +1,6 @@
 package com.service.main.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import com.service.main.jwt.JwtUtil;
 import com.service.main.model.UserAuthModel;
 import com.service.main.model.UserCredentialModel;
 import com.service.main.model.UserModel;
@@ -29,6 +33,12 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private AuthenticationManager AuthenticationManager;
 	
 	static final Logger logger = LoggerFactory.getLogger(UserController.class);	
 	
@@ -76,24 +86,48 @@ public class UserController {
         return new ResponseEntity<Success>(HttpStatus.OK);
     }
     
-	@PutMapping("/login")
-    public ResponseEntity<?> getUserAuthentication(@RequestBody UserAuthModel userAuthModel) {
+//	@PutMapping("/login")
+//    public ResponseEntity<?> getUserAuthentication(@RequestBody UserAuthModel userAuthModel) {
+//       
+//		String loginUser = null;
+//        try {
+//        	loginUser = userService.UsersAuthentication(userAuthModel);
+//            logger.info("[UserController] [getUserAuthentication] getting user details");
+//            if (loginUser=="failed") {
+//            	logger.error("[UserController] [getUserAuthentication] unauthorized access");
+//            	return new ResponseEntity<>(loginUser,HttpStatus.UNAUTHORIZED);
+//			}
+//           
+//        } catch (Exception e) {
+//            // TODO: handle exception
+//            logger.error("[UserController] [getUserAuthentication] error occured while retriving user details"+e);
+//            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+//        }
+//        return new ResponseEntity<>(jwtUtil.generateToken(userAuthModel.getEmail()), HttpStatus.OK);
+//    }
+	
+	@PostMapping("/authenticate")
+    public ResponseEntity<?> generateAuthenticationToken(@RequestBody UserAuthModel userAuthModel) {
        
 		String loginUser = null;
+		HashMap<String, String> UserAuthData = new HashMap<>();
         try {
-        	loginUser = userService.UsersAuthentication(userAuthModel);
+        	AuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAuthModel.getEmail(), userAuthModel.getPassword()));
             logger.info("[UserController] [getUserAuthentication] getting user details");
-            if (loginUser=="failed") {
-            	logger.error("[UserController] [getUserAuthentication] unauthorized access");
-            	return new ResponseEntity<>(loginUser,HttpStatus.UNAUTHORIZED);
-			}
+            loginUser = userService.getUserId(userAuthModel);
+	          if (loginUser=="failed") {
+	        	logger.error("[UserController] [getUserAuthentication] unauthorized access");
+	        	return new ResponseEntity<>(loginUser,HttpStatus.UNAUTHORIZED);
+	          }
+			UserAuthData.put("token", jwtUtil.generateToken(userAuthModel.getEmail()));
+			UserAuthData.put("userId", loginUser);
            
         } catch (Exception e) {
             // TODO: handle exception
-            logger.error("[UserController] [getUserAuthentication] error occured while retriving user details"+e);
-            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+            logger.error("[UserController] [getUserAuthentication]  unauthorized access"+e);
+            return new ResponseEntity<Error>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(loginUser, HttpStatus.OK);
+        return new ResponseEntity<>(UserAuthData, HttpStatus.OK);
     }
 	
 	@GetMapping("/profile/{userId}")
