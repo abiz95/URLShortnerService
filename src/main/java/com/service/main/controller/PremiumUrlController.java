@@ -155,8 +155,8 @@ public class PremiumUrlController {
         return new ResponseEntity<>(updateStatus, HttpStatus.OK);
     }
 	
-    @DeleteMapping("/premium/deleteUrl/{userId}/{shortenUrl}")
-    public ResponseEntity<?> deletePremiumUrl(@PathVariable String userId, @PathVariable String shortenUrl) {
+    @DeleteMapping("/premium/deleteUrl/{shortenUrl}/{userId}")
+    public ResponseEntity<?> deletePremiumUrl(@PathVariable String shortenUrl, @PathVariable String userId) {
        
 		String deleteStatus = null;
         try {

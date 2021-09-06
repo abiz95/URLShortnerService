@@ -14,15 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.service.main.model.DailyTopHitsModel;
 import com.service.main.model.MonthlyHitsModel;
-import com.service.main.serviceImpl.AnalyticsServiceImpl;
+import com.service.main.service.AnalyticsService;
 
 @CrossOrigin(origins="http://localhost:4200")
 @RestController
 public class AnalyticsController {
 
 	@Autowired
-	private AnalyticsServiceImpl analyticsServiceImpl;
+	private AnalyticsService analyticsService;
 	
 	static final Logger logger = LoggerFactory.getLogger(PremiumUrlController.class);	
 	
@@ -31,7 +32,7 @@ public class AnalyticsController {
        
 		int premiumUrlList = 0;
         try {
-        	premiumUrlList = analyticsServiceImpl.getPremiumUrlByMonth("Mwbwvk", month, year);
+        	premiumUrlList = analyticsService.getPremiumUrlByMonth("Mwbwvk", month, year);
             logger.info("[AnalyticsController] [getPremiumUrlByMonth] getting premium URL");
 //            if (premiumUrlList.isEmpty()) {
 //				
@@ -52,7 +53,7 @@ public class AnalyticsController {
        
 		List<MonthlyHitsModel> premiumUrlList = null;
         try {
-        	premiumUrlList = analyticsServiceImpl.getHitsByMonth(userId);
+        	premiumUrlList = analyticsService.getHitsByMonth(userId);
             logger.info("[AnalyticsController] [getMonthlyHitAnalytics] analyzing premium URL hits");
             if (premiumUrlList.isEmpty()) {
 				
@@ -63,6 +64,48 @@ public class AnalyticsController {
         } catch (Exception e) {
             // TODO: handle exception
             logger.error("[AnalyticsController] [getMonthlyHitAnalytics] error occured while analyzing premium URL hits"+e);
+            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(premiumUrlList, HttpStatus.OK);
+    }
+	
+	@GetMapping("/analytics/top/daily/{userId}")
+    public ResponseEntity<?> getDailyHitAnalytics(@PathVariable String userId) {
+       
+		List<DailyTopHitsModel> premiumUrlList = null;
+        try {
+        	premiumUrlList = analyticsService.getTopDailyHits(userId);
+            logger.info("[AnalyticsController] [getDailyHitAnalytics] analyzing daily URL hits");
+            if (premiumUrlList.isEmpty()) {
+				
+            	logger.info("[AnalyticsController] [getDailyHitAnalytics] no daily data available for the URL");
+            	return new ResponseEntity<Error>(HttpStatus.NO_CONTENT);
+			}
+           
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error("[AnalyticsController] [getDailyHitAnalytics] error occured while analyzing top daily URL hits"+e);
+            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(premiumUrlList, HttpStatus.OK);
+    }
+	
+	@GetMapping("/analytics/top/monthly/{userId}")
+    public ResponseEntity<?> getTopMonthlyHitAnalytics(@PathVariable String userId) {
+       
+		List<DailyTopHitsModel> premiumUrlList = null;
+        try {
+        	premiumUrlList = analyticsService.getTopMonthlyHits(userId);
+            logger.info("[AnalyticsController] [getTopMonthlyHitAnalytics] analyzing monthly URL hits");
+            if (premiumUrlList.isEmpty()) {
+				
+            	logger.info("[AnalyticsController] [getTopMonthlyHitAnalytics] no monthly data available for the URL");
+            	return new ResponseEntity<Error>(HttpStatus.NO_CONTENT);
+			}
+           
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error("[AnalyticsController] [getTopMonthlyHitAnalytics] error occured while analyzing top monthly URL hits"+e);
             return new ResponseEntity<Error>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(premiumUrlList, HttpStatus.OK);

@@ -1,6 +1,7 @@
 package com.service.main.DAOImpl;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,11 @@ public class PremiumUrlTrackerDAOImpl implements PremiumUrlTrackerDAO {
 		return premiumUrlTrackerRepository.getSumOfMonthlyHits(userId, hitDate, hitYear);
 	}
 	
-//	public List<String> getUrlMothlyHits(String userId, Integer hitDate, Integer hitYear) throws Exception {
-//		return premiumUrlTrackerRepository.getHitsByMonth(userId, hitDate, hitYear);
-//	}
+	public List<PremiumUrlTrackerEntity> getDailyHitsDetails(String userId) throws Exception {
+		return premiumUrlTrackerRepository.getDailyHits(userId);
+	}
+	
+	public List<PremiumUrlTrackerEntity> getTopMonthlyHitsDetails(String userId) throws Exception {
+		return premiumUrlTrackerRepository.getMonthlyTopHits(userId);
+	}
 }

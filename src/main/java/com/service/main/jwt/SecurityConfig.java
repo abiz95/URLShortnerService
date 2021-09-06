@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().antMatchers("/authenticate")
+        .permitAll().antMatchers("/refreshtoken/**")
         		.permitAll().antMatchers(HttpMethod.OPTIONS, "/**")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
@@ -57,7 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-           .antMatchers("/url/**");
+           .antMatchers("/url/**")
+           .antMatchers(HttpMethod.POST, "/general/saveUrl")
+           .antMatchers("/register")
+           .antMatchers("/verifyEmail")
+           .antMatchers("/user/image/upload/**");
     }
     
 }
