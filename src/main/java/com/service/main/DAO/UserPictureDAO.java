@@ -9,4 +9,5 @@ public interface UserPictureDAO {
 	public UserPictureEntity getProfilePicture(String userId, Integer imgStatus) throws Exception;
 	public void saveUser(UserPictureEntity userImg) throws Exception;
 	public UserPictureEntity getProfilePicturePath(String imagePath) throws Exception;
+	public UserPictureEntity deleteUserImage(Integer userPicIdRec) throws Exception;
 }

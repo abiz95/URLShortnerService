@@ -30,4 +30,8 @@ public class UserPictureDAOImpl implements UserPictureDAO {
 	public UserPictureEntity getProfilePicturePath(String imagePath) throws Exception {
 		return userPictureRepository.findByImagePath(imagePath);
 	}
+	
+	public UserPictureEntity deleteUserImage(Integer userPicIdRec) throws Exception {
+		return userPictureRepository.deleteByUserPicIdRec(userPicIdRec);
+	}
 }

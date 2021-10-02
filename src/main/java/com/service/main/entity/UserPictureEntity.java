@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Setter;
 
 @Entity
@@ -25,10 +24,9 @@ public class UserPictureEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Getter(value = AccessLevel.NONE)
 	@Setter(value = AccessLevel.NONE)
 	@Column(name = "userPicIdRec", nullable = false, updatable = false, insertable = false)
-	private long userPicIdRec;
+	private Integer userPicIdRec;
 	@Column(name = "userId", nullable = false, updatable = true, insertable = true)
 	private String userId;
 	@Column(name = "imagePath", nullable = false, updatable = true, insertable = true)

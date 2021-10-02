@@ -327,7 +327,7 @@ public class UserServiceImpl implements UserService {
 		
 		if (userImg.isPresent()) {
 			
-			if(userImg.get().getImgInd()==0) {
+			if(userImg.get().getImgStatus()==1) {
 				logger.info("[UserServiceImpl] [getUserImage] user image path: " + uploadPath + userId + ".jpg");
 				return readImage(userImg.get().getImagePath());
 			}
@@ -344,7 +344,7 @@ public class UserServiceImpl implements UserService {
 		if (userImgList.isPresent()) {
 			
 			for (UserPictureEntity userImgEnt : userImgList.get()) {
-				if(userImgEnt.getImgInd()==0) {
+				if(userImgEnt.getImgStatus()==1) {
 					imgList.put(userImgEnt.getImagePath(), readImage(userImgEnt.getImagePath()));
 				}
 
@@ -361,16 +361,18 @@ public class UserServiceImpl implements UserService {
 		Optional<UserPictureEntity> userImg = Optional.ofNullable(oldUserImage); 
 		
 		if (userImg.isPresent()) {
-			logger.info("[UserServiceImpl] [saveprofilePicture] user image path: " + uploadPath + userId + ".jpg");
+			logger.info("[UserServiceImpl] [saveprofilePicture] user old image path: " + uploadPath + oldUserImage.getImagePath());
+			File file = new File(uploadPath + oldUserImage.getImagePath());
+			file.delete();
 			oldUserImage.setImgStatus(0);
-			userPictureDAO.saveUser(oldUserImage);
+//			userPictureDAO.deleteUserImage(oldUserImage.getUserPicIdRec());
 		}
 		
 		UserPictureEntity newUserImage = userPictureDAO.getProfilePicturePath(imagePath);
 		Optional<UserPictureEntity> newUserImg = Optional.ofNullable(newUserImage); 
 		
 		if (newUserImg.isPresent()) {
-			logger.info("[UserServiceImpl] [saveprofilePicture] user image path: " + imagePath);
+			logger.info("[UserServiceImpl] [saveprofilePicture] user image path: " + newUserImage.getImagePath());
 			newUserImage.setImgStatus(1);
 			userPictureDAO.saveUser(newUserImage);
 		}

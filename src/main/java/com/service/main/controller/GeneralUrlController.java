@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +16,6 @@ import com.service.main.entity.GeneralUrlEntity;
 import com.service.main.model.GeneralUrlModel;
 import com.service.main.service.GeneralUrlService;
 
-@CrossOrigin(origins="http://localhost:4200")
 @RestController
 public class GeneralUrlController {
 
