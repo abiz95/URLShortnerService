@@ -165,7 +165,8 @@ public class UserServiceImpl implements UserService {
     		userModel.setCountry(userDetails.getCountry());
     		userModel.setPhoneNumber(userDetails.getPhoneNumber());
     		userModel.setEmail(userDetails.getEmail());
-    		userModel.setPassword(userDetails.getPassword());
+    		String secPassword = userDetails.getPassword();
+    		userModel.setPassword(secPassword.replaceAll( ".", "*" ));
     		userModel.setPlan(userDetails.getPlan());
     		userModel.setPlanStatus(userDetails.getPlanStatus());
     		userModel.setUserStatus(userDetails.getUserStatus());
